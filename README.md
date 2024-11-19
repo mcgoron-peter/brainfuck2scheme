@@ -42,7 +42,7 @@ lambda if the current data pointer is not zero.
 
 The transformation then goes like
 
-`[ CODE ... ] REST ...]` ->
+`[ CODE ... ] REST ...` ->
 
     (letrec ((between (lambda ()
                         (TRANSLATE CODE ...)
