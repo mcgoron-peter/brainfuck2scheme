@@ -46,8 +46,8 @@ The transformation then goes like
 
     (letrec ((between (lambda ()
                         (TRANSLATE CODE ...)
-                        (if (not (zero? vector-ref data dptr)
-                            (between))))))
+                        (if (not (zero? (vector-ref data dptr)))
+                            (between)))))
       (if (not (zero? (vector-ref data dptr)))
           (between)))
     (TRANSLATE REST ...)
