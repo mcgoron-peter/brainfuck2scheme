@@ -1,13 +1,22 @@
 # Brainfuck2Scheme
 
 A simple compiler from Brainfuck to R5RS. The compiler will output a Scheme
-list that is a lambda with two arguments:
+list that is a lambda with three arguments:
 
 * `data`: The data vector.
 * `dptr`: The initial data pointer.
+* `debugger`: Debugger function
 
 To turn the list into an executable Scheme function, just give it to
-`eval`.
+`eval`. `(execute scheme len)` will run the Scheme code in `scheme`
+with a data vector of length `len`.
+
+This dialect of Brainfuck supports `#` to call the `debugger` procedure
+with `data` and `dptr` as arguments.
+
+Since Brainfuck programs become Scheme procedures, you can modularize
+Brainfuck code and (ab)use the debugger for things like procedure calls
+and foreign libraries.
 
 ## How It Works
 
@@ -24,6 +33,7 @@ Data access brainfuck instructions are translated like
 * `<` -> `(set! dptr (- dptr 1))`
 * `.` -> `(display (vector-ref data dptr))`
 * `,` -> `(vector-set! data dptr (read-char))`
+* `#` -> `(debugger data dptr)`
 
 Branches are trickier. Basically, all code that will be executed in a block
 is in a lambda. Given `[code...]`, the `code...` will be compiled to a

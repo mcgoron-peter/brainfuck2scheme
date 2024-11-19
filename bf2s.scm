@@ -44,6 +44,8 @@
         ((#\,) (compile (cdr lst)
                         (cons '(vector-set! data dptr
                                             (char->integer (read-char))) ins)))
+        ((#\#) (compile (cdr lst)
+                        (cons '(debugger data dptr) ins)))
         ((#\[) (let ((rest (compile (cdr lst) '())))
                  (if (not (pair? rest))
                      (error "unmatched [")
@@ -62,7 +64,7 @@
         (else (compile (cdr lst) ins)))))
 
 (define (brainfuck->scheme str)
-  `(lambda (data dptr)
+  `(lambda (data dptr debugger)
      (,(compile (string->list str) '()))))
 
 (define (brainfuck->scheme-from-file filename)
@@ -74,5 +76,8 @@
              str
              (loop (string-append str (read-line port)))))))))
 
-(define (execute scheme)
-  ((eval scheme) (make-vector 4096) 0))
+(define (execute scheme len)
+  ((eval scheme) (make-vector len) 0
+                   (lambda (data dptr)
+                     (display (list data dptr))
+                     (newline))))
