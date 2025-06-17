@@ -69,15 +69,17 @@
 
 (define (brainfuck->scheme-from-file filename)
   (brainfuck->scheme
-   (call-with-port (open-input-file filename)
-     (lambda (port)
-       (let loop ((str ""))
-         (if (eof-object? (peek-char port))
-             str
-             (loop (string-append str (read-line port)))))))))
+   (with-input-from-file filename
+     (letrec ((loop
+               (lambda (chars)
+                 (let ((next (read-char)))
+                   (if (eof-object? next)
+                       (list->string (reverse chars))
+                       (loop (cons next chars)))))))
+       (lambda () (loop '()))))))
 
 (define (execute scheme len)
-  ((eval scheme) (make-vector len) 0
+  ((eval scheme) (make-vector len 0) (inexact->exact (floor (/ len 2)))
                    (lambda (data dptr)
                      (display (list data dptr))
                      (newline))))
