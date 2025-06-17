@@ -1,6 +1,6 @@
 # Brainfuck2Scheme
 
-A simple compiler from Brainfuck to R5RS. The compiler will output a Scheme
+A simple compiler from Brainfuck to R4RS. The compiler will output a Scheme
 list that is a lambda with three arguments:
 
 * `data`: The data vector.
